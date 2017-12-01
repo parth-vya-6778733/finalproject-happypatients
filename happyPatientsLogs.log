@@ -1,0 +1,129 @@
+2017-11-27 12:40:32 INFO  GuavaCompatibility:132 - Detected Guava >= 19 in the classpath, using modern compatibility layer
+2017-11-27 12:40:32 DEBUG SystemProperties:32 - com.datastax.driver.NEW_NODE_DELAY_SECONDS is undefined, using default value 1
+2017-11-27 12:40:32 DEBUG SystemProperties:32 - com.datastax.driver.NOTIF_LOCK_TIMEOUT_SECONDS is undefined, using default value 60
+2017-11-27 12:40:32 DEBUG SystemProperties:48 - com.datastax.driver.USE_NATIVE_CLOCK is undefined, using default value true
+2017-11-27 12:40:32 INFO  ClockFactory:52 - Using native clock to generate timestamps.
+2017-11-27 12:40:32 DEBUG SystemProperties:32 - com.datastax.driver.NON_BLOCKING_EXECUTOR_SIZE is undefined, using default value 8
+2017-11-27 12:40:32 DEBUG Cluster:1416 - Starting new cluster with contact points [/127.0.0.1:9042]
+2017-11-27 12:40:32 DEBUG InternalLoggerFactory:71 - Using SLF4J as the default logging framework
+2017-11-27 12:40:32 DEBUG PlatformDependent0:76 - -Dio.netty.noUnsafe: false
+2017-11-27 12:40:32 DEBUG PlatformDependent0:71 - sun.misc.Unsafe.theUnsafe: available
+2017-11-27 12:40:32 DEBUG PlatformDependent0:71 - sun.misc.Unsafe.copyMemory: available
+2017-11-27 12:40:32 DEBUG PlatformDependent0:71 - java.nio.Buffer.address: available
+2017-11-27 12:40:32 DEBUG PlatformDependent0:71 - direct buffer constructor: available
+2017-11-27 12:40:32 DEBUG PlatformDependent0:76 - java.nio.Bits.unaligned: available, true
+2017-11-27 12:40:33 DEBUG PlatformDependent0:91 - jdk.internal.misc.Unsafe.allocateUninitializedArray(int): unavailable
+java.lang.ClassNotFoundException: jdk.internal.misc.Unsafe
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:335)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at io.netty.util.internal.PlatformDependent0$6.run(PlatformDependent0.java:290)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at io.netty.util.internal.PlatformDependent0.<clinit>(PlatformDependent0.java:283)
+	at io.netty.util.internal.PlatformDependent.getSystemClassLoader(PlatformDependent.java:641)
+	at io.netty.util.internal.PlatformDependent.isAndroid0(PlatformDependent.java:665)
+	at io.netty.util.internal.PlatformDependent.<clinit>(PlatformDependent.java:65)
+	at io.netty.util.Signal.<clinit>(Signal.java:31)
+	at io.netty.util.concurrent.DefaultPromise.<clinit>(DefaultPromise.java:43)
+	at io.netty.util.concurrent.GlobalEventExecutor.<init>(GlobalEventExecutor.java:44)
+	at io.netty.util.concurrent.GlobalEventExecutor.<clinit>(GlobalEventExecutor.java:41)
+	at com.datastax.driver.core.Connection$Factory.<init>(Connection.java:752)
+	at com.datastax.driver.core.Cluster$Manager.init(Cluster.java:1446)
+	at com.datastax.driver.core.Cluster.init(Cluster.java:159)
+	at com.datastax.driver.core.Cluster.connectAsync(Cluster.java:330)
+	at com.datastax.driver.core.Cluster.connectAsync(Cluster.java:305)
+	at com.datastax.driver.core.Cluster.connect(Cluster.java:247)
+	at com.sjsu.cs249.Cassandra.CassandraConnector.connect(CassandraConnector.java:30)
+	at com.sjsu.cs249.Cassandra.CassandraInitializer.main(CassandraInitializer.java:13)
+2017-11-27 12:40:33 DEBUG PlatformDependent0:76 - java.nio.DirectByteBuffer.<init>(long, int): available
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - Java version: 8
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - sun.misc.Unsafe: available
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - -Dio.netty.tmpdir: /var/folders/r6/ghh3_v4j1l38k956j0wwlkdh0000gn/T (java.io.tmpdir)
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - -Dio.netty.bitMode: 64 (sun.arch.data.model)
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - -Dio.netty.noPreferDirect: false
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - -Dio.netty.maxDirectMemory: 3817865216 bytes
+2017-11-27 12:40:33 DEBUG PlatformDependent:76 - -Dio.netty.uninitializedArrayAllocationThreshold: -1
+2017-11-27 12:40:33 DEBUG CleanerJava6:71 - java.nio.ByteBuffer.cleaner(): available
+2017-11-27 12:40:33 DEBUG SystemProperties:48 - com.datastax.driver.FORCE_NIO is undefined, using default value false
+2017-11-27 12:40:33 INFO  NettyUtil:83 - Did not find Netty's native epoll transport in the classpath, defaulting to NIO.
+2017-11-27 12:40:33 DEBUG MultithreadEventLoopGroup:76 - -Dio.netty.eventLoopThreads: 16
+2017-11-27 12:40:33 DEBUG NioEventLoop:76 - -Dio.netty.noKeySetOptimization: false
+2017-11-27 12:40:33 DEBUG NioEventLoop:76 - -Dio.netty.selectorAutoRebuildThreshold: 512
+2017-11-27 12:40:33 DEBUG PlatformDependent:71 - org.jctools-core.MpscChunkedArrayQueue: available
+2017-11-27 12:40:33 DEBUG ResourceLeakDetector:81 - -Dio.netty.leakDetection.level: simple
+2017-11-27 12:40:33 DEBUG ResourceLeakDetector:81 - -Dio.netty.leakDetection.maxRecords: 4
+2017-11-27 12:40:33 DEBUG ResourceLeakDetectorFactory:76 - Loaded default ResourceLeakDetector: io.netty.util.ResourceLeakDetector@358ee631
+2017-11-27 12:40:33 DEBUG SystemProperties:48 - com.datastax.driver.EXTENDED_PEER_CHECK is undefined, using default value true
+2017-11-27 12:40:33 DEBUG STATES:88 - [/127.0.0.1:9042] preparing to open 1 new connections, total = 1
+2017-11-27 12:40:33 DEBUG SystemProperties:48 - com.datastax.driver.DISABLE_COALESCING is undefined, using default value false
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.numHeapArenas: 16
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.numDirectArenas: 16
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.pageSize: 8192
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.maxOrder: 11
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.chunkSize: 16777216
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.tinyCacheSize: 512
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.smallCacheSize: 256
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.normalCacheSize: 64
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.maxCachedBufferCapacity: 32768
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.cacheTrimInterval: 8192
+2017-11-27 12:40:33 DEBUG PooledByteBufAllocator:76 - -Dio.netty.allocator.useCacheForAllThreads: true
+2017-11-27 12:40:33 DEBUG ByteBufUtil:76 - -Dio.netty.allocator.type: unpooled
+2017-11-27 12:40:33 DEBUG ByteBufUtil:76 - -Dio.netty.threadLocalDirectBufferSize: 65536
+2017-11-27 12:40:33 DEBUG ByteBufUtil:76 - -Dio.netty.maxThreadLocalCharBufferSize: 16384
+2017-11-27 12:40:33 DEBUG Connection:167 - Connection[/127.0.0.1:9042-1, inFlight=0, closed=false] Connection established, initializing transport
+2017-11-27 12:40:33 DEBUG Recycler:76 - -Dio.netty.recycler.maxCapacity.default: 32768
+2017-11-27 12:40:33 DEBUG Recycler:76 - -Dio.netty.recycler.maxSharedCapacityFactor: 2
+2017-11-27 12:40:33 DEBUG Recycler:76 - -Dio.netty.recycler.linkCapacity: 16
+2017-11-27 12:40:33 DEBUG Recycler:76 - -Dio.netty.recycler.ratio: 8
+2017-11-27 12:40:33 DEBUG AbstractByteBuf:81 - -Dio.netty.buffer.bytebuf.checkAccessible: true
+2017-11-27 12:40:33 DEBUG ResourceLeakDetectorFactory:76 - Loaded default ResourceLeakDetector: io.netty.util.ResourceLeakDetector@2a8565ca
+2017-11-27 12:40:33 DEBUG SystemProperties:32 - com.datastax.driver.NATIVE_TRANSPORT_MAX_FRAME_SIZE_IN_MB is undefined, using default value 256
+2017-11-27 12:40:33 DEBUG STATES:318 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-1, inFlight=0, closed=false] Transport initialized, connection ready
+2017-11-27 12:40:33 DEBUG ControlConnection:536 - [Control connection] Refreshing node list and token map
+2017-11-27 12:40:33 DEBUG ControlConnection:275 - [Control connection] Refreshing schema
+2017-11-27 12:40:33 DEBUG STATES:183 - [Control connection] established to /127.0.0.1:9042
+2017-11-27 12:40:33 INFO  DCAwareRoundRobinPolicy:95 - Using data-center name 'datacenter1' for DCAwareRoundRobinPolicy (if this is incorrect, please provide the correct datacenter name with DCAwareRoundRobinPolicy constructor)
+2017-11-27 12:40:33 INFO  Cluster:1568 - New Cassandra host /127.0.0.1:9042 added
+2017-11-27 12:40:33 DEBUG SystemProperties:48 - com.datastax.driver.CHECK_IO_DEADLOCKS is undefined, using default value true
+2017-11-27 12:40:33 DEBUG STATES:88 - [/127.0.0.1:9042] preparing to open 1 new connections, total = 2
+2017-11-27 12:40:33 DEBUG Connection:167 - Connection[/127.0.0.1:9042-2, inFlight=0, closed=false] Connection established, initializing transport
+2017-11-27 12:40:33 DEBUG STATES:318 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-2, inFlight=0, closed=false] Transport initialized, connection ready
+2017-11-27 12:40:33 DEBUG HostConnectionPool:152 - Created connection pool to host /127.0.0.1:9042 (1 connections needed, 1 successfully opened)
+2017-11-27 12:40:33 DEBUG Session:364 - Added connection pool for /127.0.0.1:9042
+2017-11-27 12:40:33 DEBUG STATES:88 - [/127.0.0.1:9042] preparing to open 1 new connections, total = 3
+2017-11-27 12:40:33 DEBUG Connection:167 - Connection[/127.0.0.1:9042-3, inFlight=0, closed=false] Connection established, initializing transport
+2017-11-27 12:40:33 DEBUG STATES:318 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-3, inFlight=0, closed=false] Transport initialized, connection ready
+2017-11-27 12:40:33 DEBUG HostConnectionPool:152 - Created connection pool to host /127.0.0.1:9042 (1 connections needed, 1 successfully opened)
+2017-11-27 12:40:33 DEBUG Session:364 - Added connection pool for /127.0.0.1:9042
+2017-11-27 12:40:33 DEBUG Connection:518 - Connection[/127.0.0.1:9042-3, inFlight=1, closed=false] Setting keyspace hospitalops
+2017-11-27 12:40:33 DEBUG Connection:526 - Connection[/127.0.0.1:9042-3, inFlight=1, closed=false] Keyspace set to hospitalops
+2017-11-27 12:40:39 INFO  UUIDs:156 - PID obtained through native call to getpid(): 5310
+2017-11-27 12:40:39 DEBUG PatientPersonalInfo:53 - Query: 
+2017-11-27 12:40:39 DEBUG PatientPersonalInfo:54 - UPDATE PatientPersonalInfo SET firstName='Arnold' WHERE id=3a665080-d3b3-11e7-8107-914bad2a4a75 IF EXISTS;
+2017-11-27 12:40:39 DEBUG Connection:690 - Connection[/127.0.0.1:9042-3, inFlight=0, closed=true] closing connection
+2017-11-27 12:40:39 DEBUG STATES:96 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-3, inFlight=0, closed=true] closed, remaining = 2
+2017-11-27 12:40:39 DEBUG Cluster:1673 - Shutting down
+2017-11-27 12:40:39 DEBUG Connection:690 - Connection[/127.0.0.1:9042-1, inFlight=0, closed=true] closing connection
+2017-11-27 12:40:39 DEBUG STATES:96 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-1, inFlight=0, closed=true] closed, remaining = 1
+2017-11-27 12:40:39 DEBUG Connection:690 - Connection[/127.0.0.1:9042-2, inFlight=0, closed=true] closing connection
+2017-11-27 12:40:39 DEBUG STATES:96 - [/127.0.0.1:9042] Connection[/127.0.0.1:9042-2, inFlight=0, closed=true] closed, remaining = 0
+2017-11-27 12:40:41 DEBUG PoolThreadCache:81 - Freed 27 thread-local buffer(s) from thread: cluster1-nio-worker-0
+2017-11-27 12:40:41 DEBUG PoolThreadCache:81 - Freed 12 thread-local buffer(s) from thread: cluster1-nio-worker-4
+2017-11-27 12:40:41 DEBUG PoolThreadCache:81 - Freed 4 thread-local buffer(s) from thread: cluster1-nio-worker-2
+2017-11-27 15:13:01 ERROR MessageBroker:27 - Sending JMS message failed: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+javax.naming.NoInitialContextException: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+	at javax.naming.spi.NamingManager.getInitialContext(NamingManager.java:662)
+	at javax.naming.InitialContext.getDefaultInitCtx(InitialContext.java:313)
+	at javax.naming.InitialContext.getURLOrDefaultInitCtx(InitialContext.java:350)
+	at javax.naming.InitialContext.lookup(InitialContext.java:417)
+	at com.sjsu.cs249.services.MessageBroker.sendMessage(MessageBroker.java:16)
+	at com.sjsu.cs249.Cassandra.CassandraInitializer.main(CassandraInitializer.java:36)
+2017-11-27 15:13:01 ERROR MessageBroker:57 - Receiving messages failed: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+javax.naming.NoInitialContextException: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+	at javax.naming.spi.NamingManager.getInitialContext(NamingManager.java:662)
+	at javax.naming.InitialContext.getDefaultInitCtx(InitialContext.java:313)
+	at javax.naming.InitialContext.getURLOrDefaultInitCtx(InitialContext.java:350)
+	at javax.naming.InitialContext.lookup(InitialContext.java:417)
+	at com.sjsu.cs249.services.MessageBroker.receiveMessages(MessageBroker.java:36)
+	at com.sjsu.cs249.Cassandra.CassandraInitializer.main(CassandraInitializer.java:38)
