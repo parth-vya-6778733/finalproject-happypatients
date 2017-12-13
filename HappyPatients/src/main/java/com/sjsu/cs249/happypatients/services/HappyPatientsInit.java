@@ -22,41 +22,42 @@ public class HappyPatientsInit implements ServletContextListener {
 
         CassandraInitializer ci = new CassandraInitializer();
         ci.init();
+        HazelCastInitializer hi = new HazelCastInitializer();
+        hi.init();
 
-        try {
-
-            URL url = new URL("http://localhost:8080/rest/policy_system/retrievePolicy");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setRequestProperty("Accept", "application/json");
-
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP error code : "
-                        + conn.getResponseCode());
-            }
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(
-                    (conn.getInputStream())));
-
-
-            logger.debug("Output from Server .... \n");
-            while ((treatment = br.readLine()) != null) {
-                logger.debug(treatment);
-                HazelCastInitializer hi = new HazelCastInitializer();
-                hi.init(treatment);
-            }
-
-            conn.disconnect();
-
-        } catch (MalformedURLException e) {
-
-            e.printStackTrace();
-
-        } catch (IOException e) {
-
-            e.printStackTrace();
-
-        }
+//        try {
+//
+//            URL url = new URL("http://localhost:8080/rest/policy_system/retrievePolicy");
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("GET");
+//            conn.setRequestProperty("Accept", "application/json");
+//
+//            if (conn.getResponseCode() != 200) {
+//                throw new RuntimeException("Failed : HTTP error code : "
+//                        + conn.getResponseCode());
+//            }
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(
+//                    (conn.getInputStream())));
+//
+//
+//            logger.debug("Output from Server .... \n");
+//            while ((treatment = br.readLine()) != null) {
+//                logger.debug(treatment);
+//
+//            }
+//
+//            conn.disconnect();
+//
+//        } catch (MalformedURLException e) {
+//
+//            e.printStackTrace();
+//
+//        } catch (IOException e) {
+//
+//            e.printStackTrace();
+//
+//        }
 
 
 

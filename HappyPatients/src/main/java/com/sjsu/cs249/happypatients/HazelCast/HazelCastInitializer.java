@@ -13,34 +13,34 @@ import java.util.List;
 public class HazelCastInitializer {
     private static final Logger logger = Logger.getLogger(HazelCastInitializer.class);
 
-    public void init(String initialTreatment) {
+    public void init() {
         Config config = new Config();
         config.setInstanceName("my-instance");
         Hazelcast.newHazelcastInstance(config);
 
-        CassandraConnector connector = new CassandraConnector();
-        connector.connect("127.0.0.1", 9042);
-        Session session = connector.getSession();
-        KeyspaceRepository sr = new KeyspaceRepository(session);
-        sr.useKeyspace("hospitalOps");
-        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
-        PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
-        List<Diagnosis> d = pdi.selectAllTreatement(initialTreatment);
-        List<Patient> p = new ArrayList<Patient>();
-
-        HazelcastInstance hci = Hazelcast.getHazelcastInstanceByName("my-instance");
-        List<Patient> cacheMap = hci.getList("patients");
-        for(Diagnosis di : d) {
-            p.add(ppi.selectById(di.getId()));
-        }
-        cacheMap = p;
-
-        for(Patient pi : cacheMap)
-        {
-            logger.debug("Cached Patient: " + pi.getFirstName());
-        }
-
-        connector.close();
+//        CassandraConnector connector = new CassandraConnector();
+//        connector.connect("127.0.0.1", 9042);
+//        Session session = connector.getSession();
+//        KeyspaceRepository sr = new KeyspaceRepository(session);
+//        sr.useKeyspace("hospitalOps");
+//        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
+//        PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
+//        List<Diagnosis> d = pdi.selectAllTreatement(initialTreatment);
+//        List<Patient> p = new ArrayList<Patient>();
+//
+//        HazelcastInstance hci = Hazelcast.getHazelcastInstanceByName("my-instance");
+//        List<Patient> cacheMap = hci.getList("patients");
+//        for(Diagnosis di : d) {
+//            p.add(ppi.selectById(di.getId()));
+//        }
+//        cacheMap = p;
+//
+//        for(Patient pi : cacheMap)
+//        {
+//            logger.debug("Cached Patient: " + pi.getFirstName());
+//        }
+//
+//        connector.close();
 
 
     }
