@@ -1,9 +1,0 @@
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/PatientPersonalInfo.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/BookRepository.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/CassandraInitializer.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/CassandraConnector.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/KeyspaceRepository.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/Book.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/services/HappyPatientsService.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/Cassandra/Patient.java
-/Users/parthvyas/Documents/SJSU/cs249/FinalProject/HappyPatients/src/main/java/com/sjsu/cs249/services/MessageBroker.java

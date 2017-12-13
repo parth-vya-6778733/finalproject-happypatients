@@ -1,9 +1,0 @@
-com/sjsu/cs249/Cassandra/BookRepository.class
-com/sjsu/cs249/Cassandra/CassandraConnector.class
-com/sjsu/cs249/Cassandra/Book.class
-com/sjsu/cs249/Cassandra/Patient.class
-com/sjsu/cs249/Cassandra/PatientPersonalInfo.class
-com/sjsu/cs249/services/HappyPatientsService.class
-com/sjsu/cs249/Cassandra/CassandraInitializer.class
-com/sjsu/cs249/Cassandra/KeyspaceRepository.class
-com/sjsu/cs249/services/MessageBroker.class
