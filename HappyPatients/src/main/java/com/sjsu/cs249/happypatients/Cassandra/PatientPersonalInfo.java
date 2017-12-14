@@ -95,7 +95,7 @@ public class PatientPersonalInfo {
         session.execute(query);
     }
 
-        public Patient selectById(UUID id) {
+        public synchronized Patient selectById(UUID id) {
             StringBuilder sb = new StringBuilder("SELECT * FROM ").append(TABLE_NAME).append(" WHERE id = ").append(id).append(";");
 
             final String query = sb.toString();

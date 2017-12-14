@@ -5,12 +5,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.MediaType;
 
 import com.datastax.driver.core.Session;
+import com.hazelcast.config.Config;
+import com.hazelcast.config.CollectionConfig;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.client.config.ClientConfig;
+import com.hazelcast.client.HazelcastClient;
+import com.hazelcast.config.GroupConfig;
+
+import com.hazelcast.core.IList;
+import com.hazelcast.core.IMap;
 import com.sjsu.cs249.happypatients.Cassandra.*;
+import com.sjsu.cs249.happypatients.HazelCast.HazelCastInitializer;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +29,7 @@ import java.util.UUID;
 public class HappyPatientsService {
     CassandraConnector connector = new CassandraConnector();
     private static final Logger logger = Logger.getLogger(HappyPatientsService.class);
+    public String currentPolicy = "";
 
     @GET
     @Path("/retrievePatient/{param}")
@@ -29,12 +41,38 @@ public class HappyPatientsService {
         sr.useKeyspace("hospitalOps");
 
         PatientPersonalInfo ppi = new PatientPersonalInfo(session);
+        PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
 
         patientName = ppi.selectById(patientId).getFirstName() + " " + ppi.selectById(patientId).getLastName();
+        String patientAddy = ppi.selectById(patientId).getAddress();
+        String diagnosis = pdi.selectById(patientId).getDiagnosis();
+        String treatment = pdi.selectById(patientId).getTreatment();
 
         connector.close();
 
-        String output = "Hello Patient : " + patientName;
+        String output = "Hello Patient : " + patientName + "\n"
+                + "Here are your details: " + "\n"
+                + "Address: " + patientAddy
+                + "Diagnosis: " + diagnosis
+                + "Treatmen" + treatment;
+
+        return Response.status(200).entity(output).build();
+
+    }
+
+    @GET
+    @Path("/retrieveCachedPatient")
+    public Response retrievePatient() {
+        String output = "";
+
+        IMap<String,String> cacheMap = Hazelcast.getHazelcastInstanceByName("hospitalsys").getMap("patients");
+
+        for(String pb : cacheMap.keySet())
+        {
+            output = "\n" +output + "Patient: " + pb + "\n"
+            + cacheMap.get(pb) + "\n";
+            logger.debug("Old Cached Patient List: " + pb);
+        }
 
         return Response.status(200).entity(output).build();
 
@@ -216,30 +254,34 @@ public class HappyPatientsService {
     @PUT
     @Path("/updatePatientCache")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response updatePatientCache(String treatment) {
+    public Response updatePatientCache(String treatment) throws InterruptedException{
         logger.debug("Updating cache store: " + treatment);
+        this.currentPolicy=treatment;
 
         connector.connect("127.0.0.1", 9042);
         Session session = connector.getSession();
         KeyspaceRepository sr = new KeyspaceRepository(session);
         sr.useKeyspace("hospitalOps");
 
-        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
+
         PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
         List<Diagnosis> d = pdi.selectAllTreatement(treatment);
-        List<Patient> p = new ArrayList<Patient>();
+        Map<String,Patient> p = new HashMap<String,Patient>();
+        Map<String,Diagnosis> diag = new HashMap<String, Diagnosis>();
+        String firstName = "";
+        Patient pp = null;
 
-        HazelcastInstance hci = Hazelcast.getHazelcastInstanceByName("my-instance");
-        List<Patient> cacheMap = hci.getList("patients");
+        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
         for(Diagnosis di : d) {
-            p.add(ppi.selectById(di.getId()));
+            firstName = ppi.selectById(di.getId()).getFirstName();
+            pp = ppi.selectById(di.getId());
+            p.put(firstName,pp);
+            diag.put(firstName,di);
         }
-        cacheMap = p;
+        connector.close();
 
-        for(Patient pi : cacheMap)
-        {
-            logger.debug("Updated Cached Patient List: " + pi.getFirstName());
-        }
+        updateMap(p,diag);
+
 
         return Response.status(200).entity(treatment).build();
 
@@ -260,7 +302,7 @@ public class HappyPatientsService {
         ppi.deleteAddress(patientId);
 
         MessageBroker m = new MessageBroker();
-        m.sendMessage("Deleting patient personal info");
+        m.sendMessage("Deleting patient personal info(Address only)");
         m.EmailConsumer();
         m.AnalyticsConsumer();
 
@@ -312,6 +354,30 @@ public class HappyPatientsService {
         return Response.status(200).entity(output).build();
 
     }
+
+    public synchronized void updateMap(Map<String,Patient> patientMap, Map<String,Diagnosis> diagnoses) {
+        IMap<String, String> cacheMap = Hazelcast.getHazelcastInstanceByName("hospitalsys").getMap("patients");
+
+        for (String pb : cacheMap.keySet()) {
+            logger.debug("Old Cached Patient List: " + pb);
+        }
+        cacheMap.clear();
+
+
+        for (String pat : patientMap.keySet()) {
+            String info = "Here are your details: " + "\n"
+                    + "Address: " + patientMap.get(pat).getAddress() + "\n"
+                    + "Diagnosis: " + diagnoses.get(pat).getDiagnosis() + "\n"
+                    + "Treatment: " + diagnoses.get(pat).getTreatment() + "\n";
+        cacheMap.put(pat, info);
+        }
+
+        for(String pi : cacheMap.keySet())
+        {
+            logger.debug("Updated Cached Patient List: " + pi);
+        }
+    }
+
 
 
 }

@@ -25,6 +25,7 @@ public class HappyPatientsInit implements ServletContextListener {
         HazelCastInitializer hi = new HazelCastInitializer();
         hi.init();
 
+
 //        try {
 //
 //            URL url = new URL("http://localhost:8080/rest/policy_system/retrievePolicy");

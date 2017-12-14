@@ -56,7 +56,7 @@ public class PatientDiagnosisInfo {
         return diagnosis.get(0);
     }
 
-    public List<Diagnosis> selectAllTreatement(String treatment) {
+    public synchronized List<Diagnosis> selectAllTreatement(String treatment) {
         StringBuilder sb = new StringBuilder("SELECT * FROM ").append(TABLE_NAME).append(" WHERE treatment = '").append(treatment).append("' ALLOW FILTERING;");
 
         final String query = sb.toString();
