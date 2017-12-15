@@ -19,6 +19,11 @@ import com.sjsu.cs249.happypatients.Cassandra.*;
 import com.sjsu.cs249.happypatients.HazelCast.HazelCastInitializer;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
@@ -29,7 +34,7 @@ import java.util.UUID;
 public class HappyPatientsService {
     CassandraConnector connector = new CassandraConnector();
     private static final Logger logger = Logger.getLogger(HappyPatientsService.class);
-    public String currentPolicy = "";
+    String currentPolicy = "";
 
     @GET
     @Path("/retrievePatient/{param}")
@@ -52,9 +57,9 @@ public class HappyPatientsService {
 
         String output = "Hello Patient : " + patientName + "\n"
                 + "Here are your details: " + "\n"
-                + "Address: " + patientAddy
-                + "Diagnosis: " + diagnosis
-                + "Treatmen" + treatment;
+                + "Address: " + patientAddy + "\n"
+                + "Diagnosis: " + diagnosis + "\n"
+                + "Treatment" + treatment + "\n";
 
         return Response.status(200).entity(output).build();
 
@@ -112,8 +117,20 @@ public class HappyPatientsService {
 
         PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
         pdi.insertDiagnosis(diagnosis);
-
+        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
+        Patient p = ppi.selectById(diagnosis.getId());
         connector.close();
+
+        getPolicy();
+        logger.debug("Treatment: " + diagnosis.getTreatment());
+        logger.debug("Policy: " + this.currentPolicy);
+
+
+        if(diagnosis.getTreatment().equals(this.currentPolicy))
+        {
+            logger.debug("adding to cache with new patient diagnosis.");
+            addToCachedMap(p,diagnosis);
+        }
 
         String output = "Diagnosis added : " + diagnosis.getDiagnosis() + ". Here is your ID: " + diagnosis.getId();
 
@@ -135,6 +152,7 @@ public class HappyPatientsService {
         MessageBroker m = new MessageBroker();
         m.sendMessage("Updating Patient Personal Info");
         m.EmailConsumer();
+        m.sendMessage("Updating Patient Personal Info");
         m.AnalyticsConsumer();
 
         PatientPersonalInfo ppi = new PatientPersonalInfo(session);
@@ -198,9 +216,11 @@ public class HappyPatientsService {
 
         m.sendMessage("Updating Patient Diagnosis Info");
         m.EmailConsumer();
+        m.sendMessage("Updating Patient Diagnosis Info");
         m.AnalyticsConsumer();
 
         PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
+        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
 
         if(!(diagnosis.getHeight().equals("") || diagnosis.getHeight().equals(null)))
         {
@@ -223,6 +243,7 @@ public class HappyPatientsService {
             {
                 m.sendMessage("Diagnosis Done");
                 m.EmailConsumer();
+                m.sendMessage("Diagnosis Done");
                 m.AnalyticsConsumer();
             }
         }
@@ -234,11 +255,22 @@ public class HappyPatientsService {
             if(diagnosis.getTreatment().equals("completed")) {
                 m.sendMessage("Treatment Completed");
                 m.EmailConsumer();
+                m.sendMessage("Treatment Completed");
                 m.AnalyticsConsumer();
             }
+            getPolicy();
+            if(diagnosis.getTreatment().equals(this.currentPolicy)){
+                addToCachedMap(ppi.selectById(diagnosis.getId()),diagnosis);
+            }
+            else
+            {
+                logger.debug("Removing from cache");
+                checkCacheAndRemove(ppi.selectById(diagnosis.getId()));
+            }
+
         }
 
-        PatientPersonalInfo ppi = new PatientPersonalInfo(session);
+
         patientName = ppi.selectById(diagnosis.getId()).getFirstName() + " " + ppi.selectById(diagnosis.getId()).getLastName();
 
         connector.close();
@@ -256,7 +288,7 @@ public class HappyPatientsService {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response updatePatientCache(String treatment) throws InterruptedException{
         logger.debug("Updating cache store: " + treatment);
-        this.currentPolicy=treatment;
+
 
         connector.connect("127.0.0.1", 9042);
         Session session = connector.getSession();
@@ -282,7 +314,6 @@ public class HappyPatientsService {
 
         updateMap(p,diag);
 
-
         return Response.status(200).entity(treatment).build();
 
     }
@@ -304,6 +335,7 @@ public class HappyPatientsService {
         MessageBroker m = new MessageBroker();
         m.sendMessage("Deleting patient personal info(Address only)");
         m.EmailConsumer();
+        m.sendMessage("Deleting patient personal info(Address only)");
         m.AnalyticsConsumer();
 
         connector.close();
@@ -326,12 +358,16 @@ public class HappyPatientsService {
 
         PatientPersonalInfo ppi = new PatientPersonalInfo(session);
         patientName = ppi.selectById(patientId).getFirstName() + " " + ppi.selectById(patientId).getLastName();
+        PatientDiagnosisInfo pdi = new PatientDiagnosisInfo(session);
 
+        checkCacheAndRemove(ppi.selectById(patientId));
         ppi.deletePatientById(patientId);
+        pdi.deleteDiagnosisById(patientId);
 
-        connector.close();
 
         String output = "Removed Patient : " + patientName;
+
+        connector.close();
 
         return Response.status(200).entity(output).build();
 
@@ -348,7 +384,8 @@ public class HappyPatientsService {
         sr.deleteKeyspace(keyspaceName);
 
         connector.close();
-
+        IMap<String, String> cacheMap = Hazelcast.getHazelcastInstanceByName("hospitalsys").getMap("patients");
+        cacheMap.clear();
         String output = "System Deleted : " + keyspaceName;
 
         return Response.status(200).entity(output).build();
@@ -369,7 +406,7 @@ public class HappyPatientsService {
                     + "Address: " + patientMap.get(pat).getAddress() + "\n"
                     + "Diagnosis: " + diagnoses.get(pat).getDiagnosis() + "\n"
                     + "Treatment: " + diagnoses.get(pat).getTreatment() + "\n";
-        cacheMap.put(pat, info);
+            cacheMap.put(pat, info);
         }
 
         for(String pi : cacheMap.keySet())
@@ -377,6 +414,88 @@ public class HappyPatientsService {
             logger.debug("Updated Cached Patient List: " + pi);
         }
     }
+
+    public synchronized void addToCachedMap(Patient p, Diagnosis d) {
+        IMap<String, String> cacheMap = Hazelcast.getHazelcastInstanceByName("hospitalsys").getMap("patients");
+
+        for (String pb : cacheMap.keySet()) {
+            logger.debug("Old Cached Patient List: " + pb);
+        }
+
+
+        String info = "Here are your details: " + "\n"
+                + "Address: " + p.getAddress() + "\n"
+                + "Diagnosis: " + d.getDiagnosis() + "\n"
+                + "Treatment: " + d.getTreatment() + "\n";
+        cacheMap.put(p.getFirstName(), info);
+
+
+        for(String pi : cacheMap.keySet())
+        {
+            logger.debug("Updated Cached Patient List: " + pi);
+        }
+    }
+
+    public synchronized void checkCacheAndRemove(Patient p) {
+        IMap<String, String> cacheMap = Hazelcast.getHazelcastInstanceByName("hospitalsys").getMap("patients");
+
+        for (String pb : cacheMap.keySet()) {
+            logger.debug("Old Cached Patient List: " + pb);
+        }
+
+        Map<String, String> tempmap = new HashMap<String,String>();
+        for (String pat : cacheMap.keySet()) {
+            if(!(p.getFirstName().equals(pat))) {
+                tempmap.put(pat,cacheMap.get(pat));
+                logger.debug("Removing from Cache");
+            }
+        }
+        cacheMap.clear();
+        cacheMap.putAll(tempmap);
+
+
+        for(String pi : cacheMap.keySet())
+        {
+            logger.debug("Updated Cached Patient List: " + pi);
+        }
+    }
+
+    public void getPolicy()
+    {
+        try{
+        URL url = new URL("http://localhost:8080/rest/policy_system/retrievePolicy");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "application/json");
+
+
+        if (conn.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(
+                (conn.getInputStream())));
+
+        String treatment = "";
+        logger.debug("Output from Server .... \n");
+        while ((treatment = br.readLine()) != null) {
+            logger.debug(treatment);
+            this.currentPolicy=treatment;
+        }
+
+
+        conn.disconnect();
+
+    }
+        catch(Exception e)
+    {
+        logger.debug(e);
+    }
+
+}
+
+
 
 
 

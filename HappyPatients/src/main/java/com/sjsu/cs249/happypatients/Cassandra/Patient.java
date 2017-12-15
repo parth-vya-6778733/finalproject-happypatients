@@ -3,8 +3,11 @@ package com.sjsu.cs249.happypatients.Cassandra;
 import com.datastax.driver.core.utils.UUIDs;
 
 import java.util.UUID;
+import java.io.Serializable;
 
-public class Patient {
+public class Patient implements Serializable{
+
+    private static final long serialVersionUID = 1420672609912364060L;
 
     private UUID id;
 

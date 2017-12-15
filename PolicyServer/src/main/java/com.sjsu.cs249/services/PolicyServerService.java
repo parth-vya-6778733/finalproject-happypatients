@@ -6,14 +6,11 @@ import javax.ws.rs.core.MediaType;
 
 import org.apache.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import java.io.DataOutputStream;
+import java.util.Properties;
 
 @Path("/policy_system")
 public class PolicyServerService {
@@ -23,6 +20,23 @@ public class PolicyServerService {
     @GET
     @Path("/retrievePolicy")
     public Response retrievePolicy() {
+        try {
+            InputStream inputStream = this.getClass().getClassLoader()
+                    .getResourceAsStream("Policy.properties");
+
+            Properties properties = new Properties();
+
+            properties.load(inputStream);
+            //get the value of the property
+            String propValue = properties.getProperty("policy");
+
+            System.out.println("Property value is: " + propValue);
+            this.policy=propValue;
+        }
+        catch(Exception e)
+        {
+            logger.debug(e);
+        }
         return Response.status(200).entity(policy).build();
     }
 
