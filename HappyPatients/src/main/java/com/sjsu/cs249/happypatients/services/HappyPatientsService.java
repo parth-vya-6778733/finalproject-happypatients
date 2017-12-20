@@ -30,7 +30,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import io.swagger.annotations.*;
+
 @Path("/patient_system")
+@Api(value = "PatientSystem")
+@Produces({"application/json", "application/xml"})
 public class HappyPatientsService {
     CassandraConnector connector = new CassandraConnector();
     private static final Logger logger = Logger.getLogger(HappyPatientsService.class);
@@ -66,6 +70,10 @@ public class HappyPatientsService {
     }
 
     @GET
+    @ApiOperation(value = "Gets Cached Patients",
+            notes = "This gets updated when policy gets updated",
+            response = Patient.class,
+            responseContainer = "List")
     @Path("/retrieveCachedPatient")
     public Response retrievePatient() {
         String output = "";
@@ -264,7 +272,6 @@ public class HappyPatientsService {
             }
             else
             {
-                logger.debug("Removing from cache");
                 checkCacheAndRemove(ppi.selectById(diagnosis.getId()));
             }
 
@@ -447,7 +454,7 @@ public class HappyPatientsService {
         for (String pat : cacheMap.keySet()) {
             if(!(p.getFirstName().equals(pat))) {
                 tempmap.put(pat,cacheMap.get(pat));
-                logger.debug("Removing from Cache");
+                logger.debug("Adding to temp Cache");
             }
         }
         cacheMap.clear();

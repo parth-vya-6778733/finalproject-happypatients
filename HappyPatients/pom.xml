@@ -76,6 +76,12 @@
       <version>3.9.1</version>
     </dependency>
 
+    <dependency>
+      <groupId>io.swagger</groupId>
+      <artifactId>swagger-jersey2-jaxrs</artifactId>
+      <version>1.5.0</version>
+    </dependency>
+
   </dependencies>
   <build>
     <finalName>HappyPatients</finalName>

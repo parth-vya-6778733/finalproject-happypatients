@@ -16,18 +16,41 @@
       <param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
       <param-value>true</param-value>
     </init-param>
+    <init-param>
+      <param-name>jersey.config.server.provider.classnames</param-name>
+      <param-value>
+        io.swagger.jaxrs.listing.ApiListingResource,
+        io.swagger.jaxrs.listing.SwaggerSerializers,
+        com.sjsu.cs249.happypatients.services.HappyPatientsService
+      </param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <listener>
     <listener-class>
       com.sjsu.cs249.happypatients.services.HappyPatientsInit
     </listener-class>
   </listener>
-
   <servlet-mapping>
     <servlet-name>jersey-serlet</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+
+  <servlet>
+    <servlet-name>DefaultJaxrsConfig</servlet-name>
+    <servlet-class>io.swagger.jersey.config.JerseyJaxrsConfig</servlet-class>
+    <init-param>
+      <param-name>api.version</param-name>
+      <param-value>1.5.0</param-value>
+    </init-param>
+    <init-param>
+      <param-name>swagger.api.basepath</param-name>
+      <param-value>http://localhost:9090/rest</param-value>
+    </init-param>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+
+
+
 
 </web-app>
